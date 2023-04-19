@@ -1,2 +1,40 @@
-<h1>{{appTitle}} 🚀</h1>
-<p>Welcome Ironhacker!</p>
+<div>
+  <div>
+    <h1>Iron Shop</h1>
+  </div>
+
+  <div>
+    <form action="/search" method="post">
+      <div class="flex items-center mr-4">
+        <input
+          type="search"
+          id="id"
+          placeholder="Products"
+          name="id"
+          class="w-28 focus:w-64 h-8 text-lg bg-white rounded-full text-center font-thin transition ease-in-out delay-150 hover:ring-2 transition-colors focus:pointer-events-none"
+        />
+
+        <button type="submit" class="flex flex-row flex-nowrap"><i
+            class="fa fa-search ml-4 text-gray-500 transition duration-150 ease-in-out hover:scale-125 scale-150"
+          ></i></button>
+      </div>
+    </form>
+
+    <div>
+      <div>
+        <a href="/login">Log In</a>
+      </div>
+      <div>
+        <a href="/signup">Sign Up</a>
+      </div>
+    </div>
+
+  </div>
+</div>
+{{!-- make image a link that goes to detail page with the id number --}}
+<ul>
+  {{#each allProducts}}
+    <li>{{this.title}}</li>
+    <li><a href="/details/{{this.id}}"><img src="{{this.image}}" alt="{{this.name}}" /></a></li>
+  {{/each}}
+</ul>
