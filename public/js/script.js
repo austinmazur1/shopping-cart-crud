@@ -2,3 +2,4 @@
 document.addEventListener("DOMContentLoaded", () => {
   console.log("shopping-cart-crud JS imported successfully!");
 });
+

@@ -20,5 +20,6 @@
 
 <form action="/cart" method="post">
   <input type="hidden" name="id" value="{{ product.id }}">
+  <input type="number" name="quantity" value="quantity" min="1">
   <button type="submit">Add to Cart</button>
 </form>

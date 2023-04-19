@@ -3,3 +3,6 @@ function capitalize (string) {
 }
 
 module.exports = capitalize;
+
+
+const Cart = require("../models/Cart.model");
