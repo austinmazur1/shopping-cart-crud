@@ -3,6 +3,25 @@
     <h1>Iron Shop</h1>
   </div>
 
+{{#if userInSession}}
+<a href="/dashboard/{{userInSession.username}}">{{userInSession.username}}</a>
+
+{{else}}
+    <div class="buttons">
+      <div>
+        <a href="/login">Log In</a>
+      </div>
+      <div>
+        <a href="/signup">Sign Up</a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+{{/if}}
+
+
   <div>
     <form action="/search" method="post">
       <div class="flex items-center mr-4">
@@ -20,17 +39,7 @@
       </div>
     </form>
 
-    <div>
-      <div>
-        <a href="/login">Log In</a>
-      </div>
-      <div>
-        <a href="/signup">Sign Up</a>
-      </div>
-    </div>
 
-  </div>
-</div>
 {{!-- make image a link that goes to detail page with the id number --}}
 <ul>
   {{#each allProducts}}

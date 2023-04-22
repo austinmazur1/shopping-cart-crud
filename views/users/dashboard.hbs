@@ -8,10 +8,12 @@
   <h2>Welcome, {{ userInSession.username }}!</h2>
   <p>This is your profile page my friend!</p>
   <button>
-    <a href="/userProfile">Reload the page</a>
+    <a href="/dashboard/{{userInSession.username}}">Reload the page</a>
   </button>
 {{else}}
   
   <br><p>Still no logged in user, sorry!</p>
  
 {{/if}}
+
+<a href="/cart/{{userInSession._id}}">cart</a>

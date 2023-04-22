@@ -1,11 +1,14 @@
 const express = require("express");
 const router = express.Router();
 const User = require("../models/User.model");
+const {isLoggedIn} = require('../middleware/route-guard');
+
+
 
 const bcryptjs = require("bcryptjs");
 const saltRounds = 10;
 
-router.get("/signup", async (req, res, next) => {
+router.get("/signup", isLoggedIn, async (req, res, next) => {
   res.render("auth/sign-up");
 });
 
@@ -60,6 +63,7 @@ router.post("/login", async (req, res, next) => {
       // res.render('users/dashboard', { user });
       //SAVE USER IN THE SESSION
       req.session.currentUser = user;
+      // req.session.currentUser.username = username;
       console.log(req.body);
       res.redirect(`/dashboard/${username}`);
     } else {
@@ -74,6 +78,7 @@ router.post("/login", async (req, res, next) => {
 router.get("/dashboard/:username", async (req, res, next) => {
   try {
     // const user = await User.findById(id);
+    console.log('dashboard');
     res.render("users/dashboard", { userInSession: req.session.currentUser });
   } catch (error) {
     next(error);
