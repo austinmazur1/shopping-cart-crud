@@ -1,28 +1,33 @@
 const express = require("express");
 const router = express.Router();
-const User = require("../models/User.model");
-const {isLoggedIn} = require('../middleware/route-guard');
-
-
-
+//import bcrypt and define saltrounds
 const bcryptjs = require("bcryptjs");
 const saltRounds = 10;
+//import user model
+const User = require("../models/User.model");
+//import middlware
+const { isLoggedIn } = require("../middleware/route-guard");
 
+//// ROUTES ////
+
+//route to render signup page, sending middleware
 router.get("/signup", isLoggedIn, async (req, res, next) => {
   res.render("auth/sign-up");
 });
 
+//POST route to handle sign up data
 router.post("/signup", async (req, res, next) => {
-  const { email, username, password } = req.body;
-  console.log(email, username, password);
   try {
+    const { email, username, password, cart } = req.body;
+    //hash users password
     const salt = await bcryptjs.genSalt(saltRounds);
     const hashedPassword = await bcryptjs.hash(password, salt);
 
     const userFromDB = await User.create({
       email,
       username,
-      passwordHash: hashedPassword,
+      passwordHash: hashedPassword, //password is = hashedpassword
+      cart,
     });
 
     const userId = userFromDB._id;
@@ -33,14 +38,14 @@ router.post("/signup", async (req, res, next) => {
   }
 });
 
+//GET route to render login
 router.get("/login", async (req, res, next) => {
   res.render("auth/log-in");
 });
 
+//POST route to log user in
 router.post("/login", async (req, res, next) => {
-  console.log("SESSION =======>", req.session);
   const { username, password } = req.body;
-  console.log(username, password);
 
   //find the user
   try {
@@ -60,12 +65,9 @@ router.post("/login", async (req, res, next) => {
     if (!user) {
       return res.status(401).send("Invalid username or password");
     } else if (bcryptjs.compareSync(password, user.passwordHash)) {
-      // res.render('users/dashboard', { user });
       //SAVE USER IN THE SESSION
       req.session.currentUser = user;
-      // req.session.currentUser.username = username;
-      console.log(req.body);
-      res.redirect(`/dashboard/${username}`);
+      res.redirect(`/dashboard/${user._id}`);
     } else {
       res.render("auth/login", { errorMessage: "Incorrect password" });
     }
@@ -75,20 +77,24 @@ router.post("/login", async (req, res, next) => {
   }
 });
 
-router.get("/dashboard/:username", async (req, res, next) => {
+//GET route to render users dashboard
+router.get("/dashboard/:id", async (req, res, next) => {
   try {
-    // const user = await User.findById(id);
-    console.log('dashboard');
     res.render("users/dashboard", { userInSession: req.session.currentUser });
   } catch (error) {
     next(error);
   }
 });
 
-router.post('/logout', (req, res, next) => {
-    req.session.destroy(err => {
-        if (err) next(err);
-        res.redirect('/')
+//POST route to log user out
+router.post("/logout", async (req, res, next) => {
+  try {
+    req.session.destroy((err) => {
+      if (err) next(err);
+      res.redirect("/");
     });
+  } catch (error) {
+    next(error);
+  }
 });
 module.exports = router;

@@ -1,32 +1,41 @@
-const { Schema, model } = require("mongoose");
+const { Schema, model, default: mongoose } = require("mongoose");
 
 const cartSchema = new Schema(
   {
-    userId: {
-      type: String,
-      required: true,
-    },
-    items: [ 
-        {
-    productId: {
+    user: {
       type: Schema.Types.ObjectId,
-      ref: "Product",
-    },
-    quantity: {
-      type: Number,
       required: true,
-      min: [1, "quantity can not be less than 1."],
+      ref: "User",
     },
-    price: {
-      type: Number,
-      required: true,
-    },
-    total: {
-      type: Number,
-      required: true,
-    },
-  }
-]},
+    products: [
+      {
+        title: {
+          type: String,
+          required: true,
+        },
+        price: {
+          type: Number,
+          required: true,
+        },
+        description: {
+          type: String,
+        },
+        category: {
+          required: true,
+          type: String,
+        },
+        image: {
+          type: String,
+        },
+        rating: {
+          type: {
+            rate: Number,
+            count: Number,
+          },
+        },
+      },
+    ],
+  },
   {
     timestamps: true,
   }

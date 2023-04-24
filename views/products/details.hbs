@@ -18,8 +18,8 @@
 <button type="submit">Add to cart</button>
 </form> --}}
 
-<form action="/cart/:id" method="post">
+<form action="/cart/{{userInSession._id}}" method="post">
   <input type="hidden" name="id" value="{{ product.id }}">
-  <input type="number" name="quantity" value="quantity" min="1">
-  <button type="submit">Add to Cart</button>
+  {{!-- <input type="number" name="quantity" value="quantity" min="1"> --}}
+  <button type="submit" id="add-to-cart-button">Add to Cart</button>
 </form>

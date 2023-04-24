@@ -1,8 +1,21 @@
-{{#each cartItem}}
+{{!-- {{#each cart}}
 <li>{{this.title}}</li>
+<li>{{this.price}}</li>
+<img src="{{this.image}}" alt="{{this.title}}">
+<li>{{this.description}}</li>
 {{/each}}
 
 
-{{cartItem}}
+
 
 {{userInSession.username}}
+{{product}} --}}
+{{#if userInSession}}
+<a href="/">Homepage</a>
+<p>{{userInSession.username}}</p>
+{{#each userCart.products}}
+<li>{{this.title}}</li>
+<li>{{this.price}}</li>
+<img src="{{this.image}}" alt="{{this.title}}">
+{{/each}}
+{{/if}}

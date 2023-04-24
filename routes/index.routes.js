@@ -1,39 +1,45 @@
 const express = require("express");
 const router = express.Router();
-const User = require("../models/User.model");
+
+//import functions from product model
+const {
+  getDataFromMongoDB,
+  getDataFromOne,
+} = require("../models/Product.model");
+
+//// ROUTES ////
 
 /* GET home page */
+//render products from DB
 router.get("/", async (req, res, next) => {
   try {
-    const response = await fetch('https://fakestoreapi.com/products?limit=5')
-    const allProducts = await response.json(); 
-    console.log(allProducts);
-    res.render("index",{ allProducts, userInSession: req.session.currentUser});
-  } catch (error) {}
+    //function that handles the fetching from db
+    const allProducts = await getDataFromMongoDB();
+    res.render("index", {
+      allProducts,
+      userInSession: req.session.currentUser,
+    });
+  } catch (error) {
+    next(error);
+    console.log("error retrieving from the DB");
+  }
 });
 
+//GET route to show details on specific product
 router.get("/details/:id", async (req, res, next) => {
-  // console.log(req.params.id);
-  const id = req.params.id
-
-  const { email, username, password } = req.body;
-  
-  const user = await User.findOne({
-    $or: [{ username }, { email: username }],
-  });
-
-  console.log(username);
-
   try {
-    const response = await fetch(`https://fakestoreapi.com/products/${id}`)
-    const product = await response.json();
-    console.log({product});
-    res.render('products/details', {product})
+    const id = req.params.id;
+    //use the function to get product with id
+    const product = await getDataFromOne(id);
+    //send userInSession data and product data
+    res.render("products/details", {
+      product,
+      userInSession: req.session.currentUser,
+    });
   } catch (error) {
     console.log(error);
     next(error);
   }
-})
-
+});
 
 module.exports = router;

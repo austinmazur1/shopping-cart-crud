@@ -29,12 +29,13 @@ module.exports = (app) => {
         //not fully standardized as per docs, 'lax - lax same site enforcement'
         secure: process.env.NODE_ENV === "production",
         httpOnly: true,
-        maxAge: 60000,
+        maxAge: 30 * 24 * 60 * 60 * 1000 //1 month
+                // maxAge: 60000,
       },
       //make sure to use the var that holds string from .env file
       store: MongoStore.create({
         mongoUrl: process.env.MONGO_DB_URI,
-        ttl: 60 * 60 * 24, // 1 day
+        // ttl: 60 * 60 * 24, // 1 day
       }),
     })
   );
