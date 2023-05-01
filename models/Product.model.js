@@ -25,6 +25,10 @@ const productSchema = new Schema({
       rate: Number,
       count: Number,
     },
+  quantity: {
+    type: Number,
+    default: 1
+  }  
   },
 });
 

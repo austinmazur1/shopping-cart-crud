@@ -17,5 +17,28 @@
 <li>{{this.title}}</li>
 <li>{{this.price}}</li>
 <img src="{{this.image}}" alt="{{this.title}}">
+<button id="checkout">checkout</button>
+<script>
+    var stripe = Stripe(
+        "pk_test_51N2si6ElKW2sJYXfIDJ2D7uhn0vHGBZTL5L57E90OI0ZElyoTWyMzhNvmdXxF6LUwNlLTNYKO4SSQajBDEceyfS0002FTmFqHQ"
+    );
+    document.getElementById("checkout").addEventListener("click", function(){
+        console.log("hello")
+        stripe.redirectToCheckout({
+            lineItems: [
+            {
+                price: "price_1N2svNElKW2sJYXfJeVj61KG",
+                quantity: 1,
+            }],
+            mode: "payment",
+            successUrl: "http://localhost:3000/",
+            cancelUrl: "https://www.twitter.com/"
+        })
+        .then((res) => {
+            alert(res)
+        })
+    })
+</script>
 {{/each}}
 {{/if}}
+

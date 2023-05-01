@@ -11,6 +11,7 @@ const { Product } = require("../models/Product.model");
 const {
   getDataFromMongoDB,
   getDataFromOne,
+  productExists
 } = require("../models/Product.model");
 
 
@@ -28,7 +29,11 @@ router.get("/cart/:id", async (req, res, next) => {
   const userCart = await Cart.findOne({ user: id });
 
   //render the cart route, send user data and the cart data 
+  if (!userCart) {
+    res.render('cart/empty-cart')
+  } else {
   res.render("cart/cart", { userInSession: req.session.currentUser, userCart });
+}
 });
 
 
@@ -50,8 +55,9 @@ router.post("/cart/:id", async (req, res, next) => {
     const userId = req.session.currentUser._id;
 
     //again getting cart associated with users id
-    const userCart = await Cart.findOne({ user: userId });
-
+    // const userCart = await Cart.findOne({ user: userId });
+    const userCart = await Cart.findOne({ user: userId }).populate('products');
+    
     // if user doesnt have a cart
     // we create a new one
     if (!userCart) {
@@ -71,8 +77,12 @@ router.post("/cart/:id", async (req, res, next) => {
       });
       await newCart.save();
     } else {
+    
 
-      //if they have one, we push the new item to their cart
+      // if they have one, we push the new item to their cart
+      if(Cart.findOne(product)) {
+        res.redirect('/')
+      } else {
       userCart.products.push({
         id: product._id,
         title: product.title,
@@ -85,17 +95,19 @@ router.post("/cart/:id", async (req, res, next) => {
 
       await userCart.save();
     }
+  }
 
-    //we then populate the cart
-    // const populatedCart = await Cart.findOne({ user: userId }).populate(
-    //   "products"
-    // );
+    // we then populate the cart
+    const populatedCart = await Cart.findOne({ user: userId }).populate(
+      "products"
+    );
 
-    // res.render("cart/cart", {
-    //   cart: populatedCart.products,
-    //   userInSession: req.session.currentUser,
-    // });
-    res.redirect(`/dashboard/${username}`);
+    res.render("cart/cart", {
+      cart: populatedCart.products,
+      userInSession: req.session.currentUser,
+    });
+    // res.redirect(`/dashboard/${username}`);
+    
   } catch (error) {
     console.log(error);
   }

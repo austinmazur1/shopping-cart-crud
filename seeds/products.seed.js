@@ -23,11 +23,13 @@ const getProducts = async () => {
   try {
     const response = await axios.get("https://fakestoreapi.com/products");
     const allProducts = response.data
+    
     await Product.insertMany(allProducts);
     console.log(allProducts);
   } catch (error) {
     console.log(error);
   }
 };
+
 
 getProducts();
